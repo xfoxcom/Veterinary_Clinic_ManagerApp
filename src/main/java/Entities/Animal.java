@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,5 +20,9 @@ public class Animal {
     private long id;
     @NotEmpty
     private String name;
-
+    @ElementCollection
+    private List<String> diagnosis = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 }

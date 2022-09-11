@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,10 +17,14 @@ import java.util.List;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "client_id")
     private long id;
     @NotEmpty
+    @Column(name = "name")
     private String name;
+    @Column(name = "phone")
     private String phone;
     @ElementCollection(targetClass = Animal.class)
-    private List<Animal> pets;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Animal> pets = new ArrayList<>();
 }

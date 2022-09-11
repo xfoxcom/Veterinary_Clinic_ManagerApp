@@ -2,11 +2,11 @@ package Controllers;
 
 import Entities.Employee;
 import Repositories.EmployeeRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -21,18 +21,24 @@ public class EmployeeController {
 
     @PostMapping("/employee")
     public ResponseEntity<Employee> addEmployee(@RequestBody @Valid Employee employee) {
-
         employeeRepository.save(employee);
         return ResponseEntity.ok(employee);
     }
 
-    @GetMapping("/employee")
+    @GetMapping("/employees")
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
-    @GetMapping("/alive")
-    public String isAlive() {
-        return "Alive";
+    @GetMapping("/employee")
+    public Employee getEmployeeByLastname(@RequestParam(name = "lastname") String lastname) {
+       return employeeRepository.findByLastname(lastname).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+    @DeleteMapping("/employee")
+    public ResponseEntity<String> deleteEmployee(@RequestParam String lastname) {
+        employeeRepository.deleteByLastname(lastname);
+        return ResponseEntity.ok(lastname + " is fired.");
+    }
+
 }
